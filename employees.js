@@ -13,3 +13,12 @@ var connection = mysql.createConnection({
     database: "employee_tracker"
   });
 
+  connection.connect(function(err) {
+    if (err) throw err;
+    console.log("connected as id " + connection.threadId);
+    afterConnection();
+  });
+
+  function afterConnection() {
+      console.log("done.");
+  }
