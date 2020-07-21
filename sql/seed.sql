@@ -39,7 +39,7 @@ VALUES ("Accountant", "90000", 4);
 
   /* Sales Lead */
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John", "Doe", 1, null);
+VALUES ("John", "Doe", 1, "");
 
   /* Salesperson */
 INSERT INTO employee (first_name, last_name, role_id, manager_id )
@@ -47,8 +47,11 @@ VALUES ("Mike", "Chan", 2, 1);
 
   /* Lead Engineer */
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Ashley", "Rodriguez", 3, null);
+VALUES ("Ashley", "Rodriguez", 3, "");
 
 /* Software Architect */
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Kevin", "Brown", 4, 3);
+
+
+

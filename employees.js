@@ -4,9 +4,12 @@ var mysql = require("mysql");
 const fs = require("fs");
 // Include Inquirer to prompt the user on the command line
 const inquirer = require("inquirer");
-
 // Include my own external node js file for displaying
-const Viewing = require("./viewing");
+const Viewing = require("./classes/viewing");
+// js Class for employees
+const Employee = require("./classes/employee");
+// js Class for roles
+const Role = require("./classes/role");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -19,10 +22,10 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId);
-  afterConnection();
+  mainMenu();
 });
 
-function afterConnection() {
+function mainMenu() {
     // console.log("done.");
   
   var consoleView = new Viewing(connection);
@@ -57,6 +60,7 @@ function afterConnection() {
         consoleView.allEmployees(connection);
         break;
       case "Add an employee":
+        gatherNewEmployee();
         break;
       case "Add a role":
         break;
@@ -64,6 +68,14 @@ function afterConnection() {
         break;
     }
   });
+
+  function gatherNewEmployee() {
+    // create an array of questions for Inquirer
+    // invoke the inquirer
+    // process and validate the answers
+    // generate a SQL insert statment
+    // return back to the "main menu"
+  }
 
   // Add departments, roles, employees
   // View departments, roles, employees
