@@ -131,8 +131,14 @@ function gatherNewEmployee() {
                             last_name: answers.last_name,
                             role_id: role_id,
                             manager_id: manager_id};
-              
+        console.log(newEmployee);
+        let new_employee_query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES 
+        ('${answers.first_name}', '${answers.last_name}', '${role_id}', '${manager_id}');`;
+        connection.query(new_employee_query, function(err, newEmployee) {
+          if (err) throw err;
+          console.log("successfully added: "+ newEmployee);
         mainMenu();
+        });
       });
 
       });
