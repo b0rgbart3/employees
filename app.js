@@ -28,7 +28,7 @@ function mainMenu() {
       message: 'What would you like to do next?',
       name: 'user_choice',
       choices:[ { name: 'View all employees'},
-                { name: 'View all employees by department'},
+                { name: 'View employees by department'},
                 { name: 'Add an employee'},
                 { name: 'Remove an employee'},
                 { name: 'Add a role'},
@@ -41,7 +41,8 @@ function mainMenu() {
       case "View all employees":
         displayAll();
         break;
-      case "View all employees by department":
+      case "View employees by department":
+        viewEmployeesByDepartment();
         break;
       case "Add an employee":
         addNewEmployee();
@@ -149,7 +150,7 @@ function addNewEmployee() {
         connection.query(new_employee_query, function(err, newEmployee) {
             if (err) throw err;
               //  console.log("successfully added: "+ JSON.stringify(newEmployee));
-              console.log("successfully added: "+ answers.first_name + " " + answers.last_name);
+              console.log("successfully added: "+ answers.first_name + " " + answers.last_name + "\n\n");
             mainMenu();
         });
       });
@@ -178,7 +179,7 @@ function addNewDepartment() {
         new_dept_query = `INSERT INTO department (name) VALUES ('${answers.name}');`;
         connection.query(new_dept_query, function(err, newDept) {
             if (err) throw err;
-               console.log("successfully added: "+ answers.name);
+               console.log("successfully added: "+ answers.name + "\n\n");
             mainMenu();
         });
 
@@ -229,7 +230,8 @@ function addNewRole() {
             
             connection.query(new_role_query, function(err, newRole) {
                 if (err) throw err;
-                    console.log("successfully added: "+ JSON.stringify(newRole));
+                 //   console.log("successfully added: "+ JSON.stringify(newRole));
+                 console.log("successfully added: "+ answers.title + "\n\n");
                 mainMenu();
             });
 
@@ -261,13 +263,62 @@ function removeEmployee() {
           let remove_query = `REMOVE * FROM employee WHERE ID='{$employee_id};`;
           connection.query(employee_query, function(err, employee) {
             if (err) throw err;
-            console.log("Successfully removed employee: " + answers.name);
+            console.log("Successfully removed employee: " + answers.name + "\n\n");
             mainMenu();
           });
 
         
         });
       });
+
+}
+
+function viewEmployeesByDepartment() {
+ // start by getting a list of departments from the db
+ var department_query = `SELECT * FROM department;`;
+
+ connection.query(department_query, function(err, departments) {
+     if (err) throw err;
+
+    // console.log(departments);
+     let deptNames = departments.map(dept=>{ return dept.name; });
+    console.log(deptNames);
+      // questions to ask for entering a new employee into the db
+      let viewByDeptQuestions = [
+        {
+          name: "department",
+          type: "list",
+          message: "Which department would you like to view?",
+          choices: deptNames  // this array comes from the departments query
+        }
+];
+      // invoke the Inquirer 
+      inquirer
+      .prompt(viewByDeptQuestions).then(answers => {
+
+      //  console.log(answers);
+          // The user chose the department by name, but we need to store the department_id in the role table
+          let departmentIndex = deptNames.indexOf(answers.department);
+          let department_id = departments[departmentIndex].id;
+
+          //console.log("You chose dept: " + answers.department + ", with an id of: " + department_id + "\n\n");
+
+          let employee_query = `SELECT * FROM employee 
+          INNER JOIN role ON employee.role_id = role.id
+          INNER JOIN department ON role.department_id = department.id
+          WHERE department.name = "${answers.department}";`
+      
+          connection.query(employee_query, function(err, res) {
+            if (err) throw err;
+            var myTable = tabler.getTable(res);
+            console.log(myTable);
+            mainMenu();
+          });
+      
+            
+
+      });
+    });
 
 }
 
