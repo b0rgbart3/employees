@@ -25,10 +25,11 @@ function mainMenu() {
 
   // Create an array of questions for Inquirer
   let questions = [ {type: 'list',
-      message: 'What would you like to do next?',
+      message: '\nWhat would you like to do next?',
       name: 'user_choice',
       choices:[ { name: 'View all employees'},
-                { name: 'View employees by department'},
+                { name: 'View employees by Department'},
+                { name: 'View employees by Manager'},
                 { name: 'Add an employee'},
                 { name: 'Remove an employee'},
                 { name: 'Add a role'},
@@ -41,8 +42,11 @@ function mainMenu() {
       case "View all employees":
         displayAll();
         break;
-      case "View employees by department":
+      case "View employees by Department":
         viewEmployeesByDepartment();
+        break;
+      case "View employees by Manager":
+        viewEmployeesByManager();
         break;
       case "Add an employee":
         addNewEmployee();
@@ -282,7 +286,7 @@ function viewEmployeesByDepartment() {
 
     // console.log(departments);
      let deptNames = departments.map(dept=>{ return dept.name; });
-    console.log(deptNames);
+   // console.log(deptNames);
       // questions to ask for entering a new employee into the db
       let viewByDeptQuestions = [
         {
@@ -303,12 +307,21 @@ function viewEmployeesByDepartment() {
 
           //console.log("You chose dept: " + answers.department + ", with an id of: " + department_id + "\n\n");
 
-          let employee_query = `SELECT * FROM employee 
-          INNER JOIN role ON employee.role_id = role.id
-          INNER JOIN department ON role.department_id = department.id
-          WHERE department.name = "${answers.department}";`
+          // let employee_query = `SELECT * FROM employee 
+          // INNER JOIN role ON employee.role_id = role.id
+          // INNER JOIN department ON role.department_id = department.id
+          // WHERE department.name = "${answers.department}";`
+
+          let query =`SELECT employee.id, employee.first_name, employee.last_name, 
+                        role.title, department.name AS department, role.salary,
+                        CONCAT( mgr.first_name, " ", mgr.last_Name) AS manager
+                        FROM employee
+                        INNER JOIN role ON role.id = employee.role_id
+                        INNER JOIN department ON role.department_id = department.id
+                        LEFT JOIN employee mgr ON employee.manager_id= mgr.id
+                        WHERE department_id=${department_id};`;
       
-          connection.query(employee_query, function(err, res) {
+          connection.query(query, function(err, res) {
             if (err) throw err;
             var myTable = tabler.getTable(res);
             console.log(myTable);
@@ -320,7 +333,48 @@ function viewEmployeesByDepartment() {
       });
     });
 
-}
+}  // end of view Employees by Department
+
+function viewEmployeesByManager() {
+      // get a full list of employee names so we can choose who the new employee's manager is by name
+      let employee_query = `SELECT * FROM employee;`;
+      connection.query(employee_query, function(err, employees) {
+        if (err) throw err;
+        
+        let employeeNames = employees.map(employee=> { return (employee.first_name + " " + employee.last_name) ; });
+        
+        let questions = [
+          {
+              name: "name",
+              type: "list",
+              message: "Which manager?",
+              choices: employeeNames
+          }];
+             // invoke the Inquirer 
+      inquirer
+      .prompt(questions).then(answers => {
+            // The user chose the manager by name, but we need to store the manager_id in the employee table
+            let managerIndex = employeeNames.indexOf(answers.name);
+            let manager_id = employees[managerIndex].id;
+
+            let query =`SELECT employee.id, employee.first_name, employee.last_name, 
+                        role.title, department.name AS department, role.salary,
+                        CONCAT( mgr.first_name, " ", mgr.last_Name) AS manager
+                        FROM employee
+                        INNER JOIN role ON role.id = employee.role_id
+                        INNER JOIN department ON role.department_id = department.id
+                        LEFT JOIN employee mgr ON employee.manager_id= mgr.id
+                        WHERE employee.manager_id=${manager_id};`;
+             // let query = `SELECT * FROM employee WHERE manager_id=${manager_id};`;
+            connection.query(query, function(err, byM_employees) {
+              if (err) throw err;
+              var myTable = tabler.getTable(byM_employees);
+              console.log(myTable);
+              mainMenu();
+           });
+      });
+    });
+} // end of view Employees by Manager
 
   // Add departments, roles, employees
   // View departments, roles, employees
