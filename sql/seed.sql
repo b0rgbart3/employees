@@ -23,35 +23,63 @@ INSERT INTO role (title, salary, department_id)
 VALUES ("Lead Engineer", "150000", 2);
 
 INSERT INTO role (title, salary, department_id) 
-VALUES ("Software Architect", "160000", 2);
+VALUES ("Software Architect", "130000", 2);
 
 INSERT INTO role (title, salary, department_id) 
-VALUES ("Software Engineer", "140000", 2);
+VALUES ("Software Engineer", "120000", 2);
 
 INSERT INTO role (title, salary, department_id) 
-VALUES ("Legal Team Lead", "200000", 3);
+VALUES ("Legal Team Lead", "250000", 3);
 
 INSERT INTO role (title, salary, department_id) 
-VALUES ("Lawyer", "180000", 3);
+VALUES ("Lawyer", "190000", 3);
 
 INSERT INTO role (title, salary, department_id) 
-VALUES ("Accountant", "90000", 4);
+VALUES ("Accountant", "125000", 4);
+
+
+
+
+  /* single lined version */
+
 
   /* Sales Lead */
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John", "Doe", 1, "");
+VALUES ("John", "Doe", 1, 3);
 
   /* Salesperson */
 INSERT INTO employee (first_name, last_name, role_id, manager_id )
 VALUES ("Mike", "Chan", 2, 1);
 
   /* Lead Engineer */
+INSERT INTO employee (first_name, last_name, role_id, manager_id )
+VALUES ("Ashley", "Rodriiguez", 3, 0);
+
+  /* Software Engineer */
+INSERT INTO employee (first_name, last_name, role_id, manager_id )
+VALUES ("Kevin", "Tupik", 5, 3);
+
+  /* Accountant */
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Ashley", "Rodriguez", 3, "");
+VALUES ("Malia", "Brown", 8, 0);
 
-/* Software Architect */
+/* Legal Team Lead */
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Kevin", "Brown", 4, 3);
+VALUES ("Sarah", "Lourd", 6, 0);
+
+/* Lawyer */
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Tom", "Allen", 7, 7);
+
+/* Lead Engineer */
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Christian", "Eckenrode", 3, 2);
 
 
 
+
+
+
+  /* Combined version */
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("John", "Doe", 1, 3), ("Mike", "Chan", 2, 1), ("Ashley", "Rodriiguez", 3, 0), ("Kevin", "Tupik", 5, 3), ("Malia", "Brown", 8, 0), ("Sarah", "Lourd", 6, 0),("Tom", "Allen", 7, 7), ("Christian", "Eckenrode", 3, 2);
