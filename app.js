@@ -50,6 +50,7 @@ function mainMenu() {
         removeEmployee();
         break;
       case "Add a role":
+        addNewRole();
         break;
       case "Add a department":
         addNewDepartment();
@@ -147,7 +148,8 @@ function addNewEmployee() {
         ('${answers.first_name}', '${answers.last_name}', '${role_id}', '${manager_id}');`;
         connection.query(new_employee_query, function(err, newEmployee) {
             if (err) throw err;
-               console.log("successfully added: "+ newEmployee);
+              //  console.log("successfully added: "+ JSON.stringify(newEmployee));
+              console.log("successfully added: "+ answers.first_name + " " + answers.last_name);
             mainMenu();
         });
       });
@@ -181,6 +183,58 @@ function addNewDepartment() {
         });
 
       });
+} // end of add new department
+
+function addNewRole() {
+
+   // start by getting a list of departments from the db
+   var department_query = `SELECT * FROM department;`;
+
+   connection.query(department_query, function(err, departments) {
+       if (err) throw err;
+
+      // console.log(departments);
+       let deptNames = departments.map(dept=>{ return dept.name; });
+      console.log(deptNames);
+        // questions to ask for entering a new employee into the db
+        var newRoleQuestions = [
+          {
+            name: "department",
+            type: "list",
+            message: "Department:",
+            choices: deptNames  // this array comes from the departments query
+          },
+          {
+              name: "title",
+              message: "Role Title:",
+              default: "",
+          },
+          {
+              name: "salary",
+              message: "Salary:",
+              default: "0"
+          }
+  ];
+        // invoke the Inquirer 
+        inquirer
+        .prompt(newRoleQuestions).then(answers => {
+  
+        //  console.log(answers);
+            // The user chose the department by name, but we need to store the department_id in the role table
+            let departmentIndex = deptNames.indexOf(answers.department);
+            let department_id = departments[departmentIndex].id;
+
+            new_role_query = `INSERT INTO role (title, salary, department_id) 
+            VALUES ('${answers.title}', '${answers.salary}', '${department_id}');`;
+            
+            connection.query(new_role_query, function(err, newRole) {
+                if (err) throw err;
+                    console.log("successfully added: "+ JSON.stringify(newRole));
+                mainMenu();
+            });
+
+        });
+  });
 } // end of add new department
 
 function removeEmployee() {
