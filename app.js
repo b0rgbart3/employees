@@ -19,9 +19,12 @@ var connection = mysql.createConnection({
     database: "employee_tracker"
 });
 
+var employee;
+
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected as id " + connection.threadId);
+ // console.log("connected as id " + connection.threadId);
+  employee = new Employee(connection);
   mainMenu();
 });
 
@@ -60,7 +63,7 @@ function mainMenu() {
         consoleView.allEmployees(connection);
         break;
       case "Add an employee":
-        gatherNewEmployee();
+        employee.gather();
         break;
       case "Add a role":
         break;

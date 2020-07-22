@@ -37,9 +37,9 @@ class Employee {
 
         ];
 
-        var role = new Role();
+        var role = new Role(this.connection);
         var roles = role.getRoles();
-        console.log(roles);
+      //  console.log(roles);
 
     }
 }

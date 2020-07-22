@@ -9,8 +9,27 @@ class Role {
     // pass in the db connection 
     constructor(connection) {
         this.connection = connection;
+        this.roleList = [];
     }
 
+    async queryRoles() {
+        var query = `SELECT role.title FROM employee_tracker.role;`;
+
+        await this.connection.query(query, function(err, res) {
+            if (err) throw err;
+
+            var newList =  res.map( packet => { return packet.title });
+       
+            this.roleList = newList;
+        });
+        console.log(this.roleList);
+      
+
+    }
+    async getRoles() {
+        await this.queryRoles();
+      //  console.log(this.roleList);
+    }
 
 }
 
