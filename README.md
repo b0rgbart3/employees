@@ -1,10 +1,38 @@
 # MySQL Employee Tracker
 
-This **C**ontent **M**anagement **S**ystem is a solution for managing a company's employees using node, inquirer, and MySQL.
+This **C**ontent **M**anagement **S**ystem is a command line interface vased solution for managing a company's employees using node, inquirer, and MySQL.
 
+## Table of contents
+1. [Demo](#Demo)
+2. [Usage](#Usage)
+3. [User Story](#UserStory)
+4. [Features](#Features)
+5. [Technologies](#Technologies)
+6. [Database Schema](#DatabaseSchema)
+7. [License](#License)
+8. [Credits](#Credits)
+9. [Badges](#Badges)
+
+<a name="Demo"></a>
 ## Demo
-![Employee Tracker](Assets/employee-tracker.gif)
+![Employee Tracker](employee_demo.gif)
 
+<a name="Usage"></a>
+## Usage
+```sh
+node employees
+```
+
+<a name="User Story"></a>
+## User Story
+
+```
+As a business owner
+I want to be able to view and manage the departments, roles, and employees in my company
+So that I can organize and plan my business
+```
+
+<a name="Database Schema"></a>
 ## Database Schema
 
 The database schema contains three tables:
@@ -30,109 +58,50 @@ The database schema contains three tables:
   * **last_name** - VARCHAR(30) to hold employee last name
   * **role_id** - INT to hold reference to role employee has
   * **manager_id** - INT to hold reference to another employee that manager of the current employee. This field may be null if the employee has no manager
-  
+
+<a name="Features"></a>
 ## Features
 
   * Add departments, roles, employees
-
   * View departments, roles, employees
+  * View employees by department
+  * View employees by manager**
+  * Update employee role
+  * Update employee manager**
+  * Remove employees **
 
-  * Update employee roles
+  **Bonus features
 
-## Bonus Features
+## Features to be added
 
-  * Update employee managers
-
-  * View employees by manager
-
-  * Delete departments, roles, and employees
-
+  * Remove departments, roles
   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
 
-## User Story
 
-```
-As a business owner
-I want to be able to view and manage the departments, roles, and employees in my company
-So that I can organize and plan my business
-```
+<a name="Technologies"></a>
+## Technologies
 
-How do you deliver this? Here are some guidelines:
-
-* Use the [MySQL](https://www.npmjs.com/package/mysql) NPM package to connect to your MySQL database and perform queries.
-
-* Use [InquirerJs](https://www.npmjs.com/package/inquirer/v/0.2.3) NPM package to interact with the user via the command-line.
-
-* Use [console.table](https://www.npmjs.com/package/console.table) to print MySQL rows to the console. There is a built-in version of `console.table`, but the NPM package formats the data a little better for our purposes.
-
-* You may wish to have a separate file containing functions for performing specific SQL queries you'll need to use. Could a constructor function or a class be helpful for organizing these?
-
-* You will need to perform a variety of SQL JOINS to complete this assignment, and it's recommended you review the week's activities if you need a refresher on this.
+  * MySQL npm package
+  * InquirerJS npm package
+  * Console.Table npm package
+  * NODE.js
+  * MySQL Database
+  * SQL queries with multiple JOINS
 
 
+<a name='License'></a>
+## License
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-### Hints
+<a name="Credits"></a>
+## Credits
+b0rgBart3
+<a name="Badges"></a>
+## Badges
+ [![Generic badge](https://img.shields.io/badge/made_with-NODE.js-<COLOR>.svg)](https://shields.io/)
 
-* You may wish to include a `seed.sql` file to pre-populate your database. This will make development of individual features much easier.
+**on github:** <a href='github.com/b0rgBart3'>b0rgBart3</a>
 
-* Focus on getting the basic functionality completed before working on more advanced features.
+[![](https://github.com/b0rgBart3.png?size=90)](https://github.com/remarkablemark)
 
-* Review the week's activities for a refresher on MySQL.
-
-* Check out [SQL Bolt](https://sqlbolt.com/) for some extra MySQL help.
-
-## Minimum Requirements
-
-* Functional application.
-
-* GitHub repository with a unique name and a README describing the project.
-
-* The command-line application should allow users to:
-
-  * Add departments, roles, employees
-
-  * View departments, roles, employees
-
-  * Update employee roles
-
-## Bonus
-
-* The command-line application should allow users to:
-
-  * Update employee managers
-
-  * View employees by manager
-
-  * Delete departments, roles, and employees
-
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
-
-## Commit Early and Often
-
-One of the most important skills to master as a web developer is version control. Building the habit of committing via Git is important for two reasons:
-
-* Your commit history is a signal to employers that you are actively working on projects and learning new skills.
-
-* Your commit history allows you to revert your codebase in the event that you need to return to a previous state.
-
-Follow these guidelines for committing:
-
-* Make single-purpose commits for related changes to ensure a clean, manageable history. If you are fixing two issues, make two commits.
-
-* Write descriptive, meaningful commit messages so that you and anyone else looking at your repository can easily understand its history.
-
-* Don't commit half-done work, for the sake of your collaborators (and your future self!).
-
-* Test your application before you commit to ensure functionality at every step in the development process.
-
-We would like you to have well over 200 commits by graduation, so commit early and often!
-
-
-## Submission on BCS
-
-You are required to submit the following:
-
-* The URL of the GitHub repository
-
-- - -
-© 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
+Email: borgBart3@gmail.com

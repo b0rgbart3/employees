@@ -34,7 +34,9 @@ function mainMenu() {
                 { name: 'Remove an employee'},
                 { name: 'Update employee role'},
                 { name: 'Update employee manager'},
+                { name: 'View all roles'},
                 { name: 'Add a role'},
+                { name: 'View all departments'},
                 { name: 'Add a department'}]}];
 
   // invoke the Inquirer 
@@ -62,8 +64,14 @@ function mainMenu() {
       case "Update employee manager":
         updateEmployeeManager();
         break;
+      case "View all roles":
+        viewAllRoles();
+        break;
       case "Add a role":
         addNewRole();
+        break;
+      case "View all departments":
+        viewAllDepartments();
         break;
       case "Add a department":
         addNewDepartment();
@@ -486,6 +494,34 @@ function updateEmployeeManager() {
      // start by getting a list of roles from the db
      
 } // end of update employee manager
+
+function viewAllRoles() {
+  let query = `SELECT * FROM role;`;
+  connection.query(query, function(err, roles) {
+    if (err) throw err;
+    
+    let roleNames = roles.map(role=>{ return role.title; });
+    //let rolesObject = { Roles: roleNames};
+    var myTable = tabler.getTable(roleNames);
+    console.log(myTable);
+    console.log("\n");
+    mainMenu();
+  });
+} // end of View All Roles
+
+function viewAllDepartments() {
+  let query = `SELECT * FROM department;`;
+  connection.query(query, function(err, depts) {
+    if (err) throw err;
+    
+    let deptNames = depts.map(dept=>{ return dept.name; });
+    //let rolesObject = { Roles: roleNames};
+    var myTable = tabler.getTable(deptNames);
+    console.log(myTable);
+    console.log("\n");
+    mainMenu();
+  });
+} // end of View All Roles
 
 
 
