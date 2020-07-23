@@ -33,6 +33,7 @@ function mainMenu() {
                 { name: 'Add an employee'},
                 { name: 'Remove an employee'},
                 { name: 'Update employee role'},
+                { name: 'Update employee manager'},
                 { name: 'Add a role'},
                 { name: 'Add a department'}]}];
 
@@ -57,6 +58,9 @@ function mainMenu() {
         break;
       case "Update employee role":
         updateEmployeeRole();
+        break;
+      case "Update employee manager":
+        updateEmployeeManager();
         break;
       case "Add a role":
         addNewRole();
@@ -423,8 +427,7 @@ function updateEmployeeRole() {
                    let role_id = roles[roleIndex].id;
                    var update_query = `UPDATE employee
                    SET role_id = ${role_id}
-                   WHERE id = ${emp_id};
-                   ;`;
+                   WHERE id = ${emp_id};`;
                    connection.query(update_query, function(err, updated) {
                     if (err) throw err;
                     console.log("Successfully updated "+ answers.name + " to the role of " + roleChoice.title+".\n");
@@ -436,6 +439,55 @@ function updateEmployeeRole() {
         });
   });
 } // end of update Employee Role
+
+function updateEmployeeManager() {
+  let query = `SELECT * FROM employee;`;
+  connection.query(query, function(err, employees) {
+    if (err) throw err;
+    
+    let employeeNames = employees.map(employee=> { return (employee.first_name + " " + employee.last_name) ; });
+    
+    let questions = [
+      {
+          name: "name",
+          type: "list",
+          message: "Which employee?",
+          choices: employeeNames
+      }];
+         // invoke the Inquirer 
+  inquirer
+  .prompt(questions).then(answers => {
+      let empIndex = employeeNames.indexOf(answers.name);
+      let emp_id = employees[empIndex].id;
+
+      manager_questions = [
+        {
+            name: "name",
+            type: "list",
+            message: `Who is ${answers.name}'s manager?`,
+            choices: employeeNames
+        }];
+          // invoke the Inquirer 
+        inquirer
+        .prompt(manager_questions).then(newmanager => {
+          let mgrIndex = employeeNames.indexOf(newmanager.name);
+          let mgr_id = employees[mgrIndex].id;
+          var update_query = `UPDATE employee
+          SET manager_id = ${mgr_id} WHERE id = ${emp_id};`;
+          connection.query(update_query, function(err, updated) {
+            if (err) throw err;
+            console.log("Successfully updated "+ answers.name + "'s manager to be" + newmanager.name+".\n");
+                        mainMenu();
+          });
+      });
+    });
+  
+  });
+     // start by getting a list of roles from the db
+     
+} // end of update employee manager
+
+
 
   // Add departments, roles, employees
   // View departments, roles, employees
