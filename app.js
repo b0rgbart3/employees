@@ -32,6 +32,7 @@ function mainMenu() {
                 { name: 'View employees by Manager'},
                 { name: 'Add an employee'},
                 { name: 'Remove an employee'},
+                { name: 'Update employee role'},
                 { name: 'Add a role'},
                 { name: 'Add a department'}]}];
 
@@ -53,6 +54,9 @@ function mainMenu() {
         break;
       case "Remove an employee":
         removeEmployee();
+        break;
+      case "Update employee role":
+        updateEmployeeRole();
         break;
       case "Add a role":
         addNewRole();
@@ -375,6 +379,63 @@ function viewEmployeesByManager() {
       });
     });
 } // end of view Employees by Manager
+
+
+function updateEmployeeRole() {
+   // get a full list of employee names so we can choose who the new employee's manager is by name
+   let employee_query = `SELECT * FROM employee;`;
+   connection.query(employee_query, function(err, employees) {
+     if (err) throw err;
+     
+     let employeeNames = employees.map(employee=> { return (employee.first_name + " " + employee.last_name) ; });
+     
+     let questions = [
+       {
+           name: "name",
+           type: "list",
+           message: "Which employee?",
+           choices: employeeNames
+       }];
+          // invoke the Inquirer 
+   inquirer
+   .prompt(questions).then(answers => {
+         // The user chose the manager by name, but we need to store the manager_id in the employee table
+         let empIndex = employeeNames.indexOf(answers.name);
+         let emp_id = employees[empIndex].id;
+          // start by getting a list of roles from the db
+          var role_query = `SELECT * FROM role;`;
+
+          connection.query(role_query, function(err, roles) {
+              if (err) throw err;
+              let roleNames = roles.map(role=>{ return role.title; });
+              let rolequestion = [
+                {
+                    name: "title",
+                    type: "list",
+                    message: `Which role would you like to assign to ${answers.name}?`,
+                    choices: roleNames
+                }];
+
+                inquirer
+                .prompt(rolequestion).then(roleChoice => {
+                  console.log(roleChoice);
+                   let roleIndex = roleNames.indexOf(roleChoice.title);
+                   let role_id = roles[roleIndex].id;
+                   var update_query = `UPDATE employee
+                   SET role_id = ${role_id}
+                   WHERE id = ${emp_id};
+                   ;`;
+                   connection.query(update_query, function(err, updated) {
+                    if (err) throw err;
+                    console.log("Successfully updated "+ answers.name + " to the role of " + roleChoice.title+".\n");
+                    mainMenu();
+                   });
+
+                });
+             });
+        });
+  });
+} // end of update Employee Role
 
   // Add departments, roles, employees
   // View departments, roles, employees
